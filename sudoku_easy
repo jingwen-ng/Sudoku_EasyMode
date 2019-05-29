@@ -1,0 +1,176 @@
+import java.util.ArrayList;
+import java.lang.reflect.Array;
+import java.util.*;
+
+//partially complete, not sure how to apply backtrack and recursive method.
+
+/**
+ * Sudoku
+ */
+public class SudokuV2 {
+
+    public static int[][] board;
+    public static final int SIZE = 9;
+    public static int EMPTY = 0; // empty cell
+    public static String solution;
+
+    static void displayBoard(String boardString){
+        String[] boardRows = {"", "", "", "", "", "", "", "", ""};
+        char[] boardArray = boardString.toCharArray();
+        for(int index = 0; index < boardString.length(); index ++ ){
+            boardRows[index/9] = boardRows[index/9] + " " + boardArray[index];
+            if(index % 9 == 2 || index % 9 == 5){
+                boardRows[index/9] = boardRows[index/9] + " |";
+            }
+        }
+        System.out.println("-------------------------");
+        for(int index = 0; index < 9; index ++ ){
+            System.out.println("|" + boardRows[index] + " |");
+            if(index == 2 || index == 5){
+                System.out.println("-------------------------");
+            }
+        }
+        System.out.println("-------------------------");
+    } 
+
+    static String solve(String boardString){
+        displayBoard(boardString);
+       
+        char[] strArr = boardString.toCharArray();
+       // ArrayList<Integer> filteredPossibleValues = new ArrayList<Integer>();
+
+        
+        board = new int[SIZE][SIZE];
+        
+        //put it into 2D array
+        for(int i = 0; i < SIZE; i++){
+            for(int j = 0; j < SIZE; j++){
+                board[i][j] = strArr[i*SIZE + j]-'0';
+            }
+        }
+
+        for (int row = 0; row < SIZE; row++) {
+            for (int col = 0; col < SIZE; col++) {
+            
+                // search for empty cell
+            
+             if (board[row][col] == EMPTY) {
+               // try possible number
+              
+               for (int number = 1; number <= SIZE; number++) {
+                 if (isValid(row, col, number)) {
+                   // number ok. it respects sudoku constraints
+                   board[row][col] = number;
+        
+                   
+                }
+               }
+               
+              }
+             
+             }
+             
+            }
+            for(int i = 0; i < SIZE; i++){
+                for(int j = 0; j < SIZE; j++){
+                    System.out.println(board[i][j]);
+                }
+            }
+          
+        return "";
+    }
+    
+    public static int size(Object object) {
+        if (!object.getClass().isArray()) {
+            return 1;
+        }
+    
+        int size = 0;
+        for (int i = 0; i < Array.getLength(object); i++) {
+            size += size(Array.get(object, i));
+        }
+        return size;
+    }
+
+    public static boolean inRow(int row, int number) {
+		for (int i = 0; i < SIZE; i++)
+			if (board[row][i] == number)
+				return true;
+		
+		return false;
+    }
+    
+    public static boolean inCol(int col, int number) {
+		for (int i = 0; i < SIZE; i++)
+			if (board[i][col] == number)
+				return true;
+		
+		return false;
+    }
+    
+    public static boolean inBox(int row, int col, int number) {
+		int r = row - row % 3;
+		int c = col - col % 3;
+		
+		for (int i = r; i < r + 3; i++)
+			for (int j = c; j < c + 3; j++)
+				if (board[i][j] == number)
+					return true;
+		
+		return false;
+	}
+	   
+    public static boolean isValid(int row, int col, int number) {
+		return !inRow(row, number)  &&  !inCol(col, number)  &&  !inBox(row, col, number);
+	}
+
+   
+    
+    public static void main(String[] args) {
+        // Easy Mode
+       
+        solution = solve("105802000090076405200400819019007306762083090000061050007600030430020501600308900");
+       // String solution = solve("105802000090076405200400819019007306762083090000061050007600030430020501600308900");
+        
+        
+         System.out.println(solution.equals("145892673893176425276435819519247386762583194384961752957614238438729561621358947"));
+       
+       //print out the board, get the row and col value
+      
+      
+           
+       // Character [] row = {' ', ' ',' ',' ',' ',' ',' ',' ',' '};
+       
+    //    for (int i = 0; i < preFixValue.length(); i++) {
+          
+    //        if( i/9 == 0 ){
+    //         char tempRow = preFixValue.charAt(i);
+    //         System.out.println(tempRow);
+
+    //         row = row.toString(tempRow);
+    //     }
+          
+     //  }
+     //  ArrayList<String> rowString = new ArrayList<String>(Arrays.asList(solution.split("|")));
+    //   System.out.println(rowString.toString());
+      // Character [] row = {};
+        //char [] listOfPossibleValues = {'1', '2','3','4','5','6','7','8','9'};
+       
+        // For every possible value
+        // for(int i = 0; i < listOfPossibleValues.length; i++){
+        //     //  c represent the current character
+        //     Character c = listOfPossibleValues[i];
+        //     // rowArrayList are the values used by this row
+        //     // the current character is used by rowArrayList
+        //     //  if row does not contain current character, means that current characater is a possible value
+        //     if(!rowArrayList.contains(c)){
+        //         filteredPossibleValues.add(c);
+        //     }
+        // }
+
+       // solve("105802000090076405200400819019007306762083090000061050007600030430020501600308900");
+        // // Hard Mode
+        // String solution = solve("400000805030000000000700000020000060000080400000010000000603070500200000104000000");
+        // System.out.println(solution.equals("417369825632158947958724316825437169791586432346912758289643571573291684164875293"));
+    }
+}
